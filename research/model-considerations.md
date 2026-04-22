@@ -6,7 +6,7 @@ The model choice is open. This file covers the key axes that affect hardware siz
 
 ### Dense vs. MoE architecture
 - **Dense** (e.g. Llama, Qwen, DeepSeek-R1): every parameter is active every token. VRAM requirement = model size at chosen quant. Straightforward.
-- **MoE** (e.g. MiniMax M2.1, DeepSeek-V3, Mixtral): only a fraction of params are active per token; the rest sit in RAM/disk. A 200B+ MoE can run on much less VRAM than a 200B dense model.
+- **MoE** (e.g. MiniMax M2.1, DeepSeek-V3, Mixtral): only a fraction of params are *computed* per token, which is why generation is fast even on huge models. However, *all* weights still need to be stored in accessible memory (VRAM or system RAM) — the router can call any expert at any time. A 229B MoE at Q4 still occupies ~130GB; it just runs faster than a 229B dense model would. The benefit over dense is speed and CPU-offload friendliness, not reduced storage footprint.
 
 ### Parameter count and quant
 | Model size | Q4 quant | Q8 quant | Notes |
@@ -29,12 +29,12 @@ Good fit for: DGX Spark (single unit), learning build with 24GB GPU, any hardwar
 
 | Model | Params | Notes |
 |-------|--------|-------|
-| Qwen3 Coder 30B | 30B | ~483 tok/s on DGX Spark (FP8) — very fast |
+| Qwen3 Coder 30B | 30B | [~483 tok/s on DGX Spark (FP8)](https://developer.nvidia.com/blog/how-nvidia-dgx-sparks-performance-enables-intensive-ai-tasks/) — very fast |
 | DeepSeek-Coder-V2-Lite | 16B MoE (2.4B active) | Extremely efficient for coding |
 | Codestral 22B (Mistral) | 22B | Strong coding benchmark scores |
 
 ### Mid-size (~70B)
-Good fit for: mid-tier build (2× A6000), DGX Spark pair.
+Good fit for: mid-tier build (2× A6000), DGX Spark pair (256GB).
 
 | Model | Params | Notes |
 |-------|--------|-------|
@@ -43,12 +43,12 @@ Good fit for: mid-tier build (2× A6000), DGX Spark pair.
 | DeepSeek-R1 70B | 70B | Reasoning-focused, strong coder |
 
 ### Large MoE (~200B+)
-Good fit for: mid-tier+ build, large system RAM + 24GB+ GPU.
+Good fit for: mid-tier+ build with large system RAM. Not a good fit for DGX Spark single unit — all weights must be stored in memory; Q4 of a 229B MoE is ~130GB, which exceeds the 128GB unified memory ceiling after accounting for KV cache. ([NVIDIA's own spec](https://www.nvidia.com/en-us/products/workstations/dgx-spark/) says "up to 200B parameters" for inference.)
 
-| Model | Params | Active params | Notes |
-|-------|--------|--------------|-------|
-| MiniMax M2.1 | 229B MoE | ~10B | Original reference; Q4 ~130GB total |
-| DeepSeek-V3 | 671B MoE | ~37B | Very capable; Q4 needs ~400GB total |
+| Model | Params | Active params | Q4 storage | Notes |
+|-------|--------|--------------|------------|-------|
+| MiniMax M2.1 | 229B MoE | ~10B | ~130GB | Original reference; needs Q3 (~108GB) on DGX Spark |
+| DeepSeek-V3 | 671B MoE | ~37B | ~400GB | Very capable; needs mid-tier build minimum |
 
 ---
 

@@ -6,20 +6,20 @@ Build choice is still open. See `model-considerations.md` — hardware sizing de
 
 ## Option 0 — DGX Spark (~$4,699)
 
-NVIDIA GB10 Grace Blackwell Superchip. Compact desktop, 300W peak.
+NVIDIA GB10 Grace Blackwell Superchip. Compact desktop, 300W peak. ([Product page](https://www.nvidia.com/en-us/products/workstations/dgx-spark/), [LMSYS review](https://www.lmsys.org/blog/2025-10-13-nvidia-dgx-spark/))
 
-- **Memory**: 128GB LPDDR5X unified (CPU + GPU share it)
+- **Memory**: 128GB LPDDR5X unified — CPU and GPU share the same pool ([specs](https://www.aitooldiscovery.com/ai-infra/nvidia-dgx-spark-explained))
 - **AI compute**: ~1 PFLOP FP4
-- **Inference perf**: ~483 tok/s on Qwen3 Coder 30B (FP8), ~38 tok/s on GPT-OSS 120B generation
+- **Inference perf**: [~483 tok/s on Qwen3 Coder 30B (FP8), ~38 tok/s generation on GPT-OSS 120B](https://developer.nvidia.com/blog/how-nvidia-dgx-sparks-performance-enables-intensive-ai-tasks/)
 - **Two-unit NVLink**: connect two for 256GB unified memory, ~$9,400
 - **Management**: NVIDIA's own tooling; no traditional IPMI but decent remote management
 - **Form factor**: Mac Mini-sized, quiet, 300W — no rack needed
-- **Availability**: in stock via NVIDIA, Amazon, Acer/ASUS/Dell/MSI OEM variants
-- **Price note**: increased from $3,999 → $4,699 in February 2026 (LPDDR5X supply constraints)
+- **Availability**: in stock via [NVIDIA](https://marketplace.nvidia.com/en-us/enterprise/personal-ai-supercomputers/dgx-spark/), [Amazon](https://www.amazon.com/NVIDIA-DGX-SparkTM-Supercomputer-Blackwell/dp/B0FWJ16CCH), Acer/ASUS/Dell/MSI OEM variants
+- **Price note**: [increased from $3,999 → $4,699 in February 2026](https://forums.developer.nvidia.com/t/2-23-2026-price-change-announcement/361713) due to LPDDR5X supply constraints
 
 **Best fit if**: model choice lands on 30–70B range; you want a clean turnkey box; you don't need IPMI-grade headless management.
 
-**Weakness**: 128GB is tight for large MoE models (MiniMax M2.1 Q4 is ~130GB); can't swap components; proprietary ecosystem.
+**Memory ceiling caveat**: 128GB is not about compute — MoE models are indeed efficient per token. But *all* weights must be resident in memory so any expert can be called. MiniMax M2.1 at Q4 is ~130GB total, which exceeds 128GB once you account for KV cache. The Q3 quant (~108GB) fits. NVIDIA's own spec says ["up to 200B parameters"](https://www.nvidia.com/en-us/products/workstations/dgx-spark/) for inference, which aligns with this. For models under ~120B (or any 30–70B model), this isn't a constraint at all.
 
 ---
 
