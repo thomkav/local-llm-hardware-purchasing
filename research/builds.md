@@ -75,8 +75,25 @@ Sources: TheServerStore, UNIXSurplus, Bargain Hardware (UK), ServerMonkey, r/har
 
 - M3 Ultra 256GB (~$5.6k when available) — 819GB/s memory bandwidth
 - M4 Max 128GB (~$3.5k) — caps at 128GB
-- Issues: no IPMI, soldered RAM, slower CUDA-equivalent prefill on large contexts, Apple premium
 - As of April 2026: both configs "currently unavailable," no ETA; M5 Ultra expected ~WWDC June 2026
+
+### Why not recommended — and what 819GB/s actually means
+
+**819GB/s is a genuine strength, not a limitation.** Token generation speed is largely memory-bandwidth-bound — the GPU reads the model weights roughly once per token, so higher bandwidth = faster tok/s. At 819GB/s, the M3 Ultra's token generation is competitive with many GPU setups. The DGX Spark's GB10 chip accesses its 128GB LPDDR5X pool at ~450GB/s via NVLink-C2C, so the M3 Ultra actually has *higher* raw memory bandwidth and would win on tok/s for large models where that's the bottleneck.
+
+The reasons not to use it are operational and architectural, not performance:
+
+1. **No IPMI / out-of-band management.** For a headless basement server, this is the critical gap. If macOS wedges, you need physical access — no remote power cycle, no remote console. Supermicro boards have a full BMC you can SSH into even when the OS is completely dead.
+
+2. **Soldered RAM, no upgrade path.** 256GB is the ceiling forever. Can't add RAM, can't swap in a newer GPU in two years. The DIY builds let you upgrade components independently.
+
+3. **Prefill is slower.** Token *generation* is bandwidth-bound (Mac wins here), but *prompt processing* (prefill) is compute-bound — it parallelizes over all input tokens at once, hammering the tensor cores. Blackwell and CUDA have a significant advantage here. Claude Code sends large repo contexts as prompts, so prefill latency matters.
+
+4. **macOS, not Linux.** llama.cpp's Metal backend works, but NVIDIA's inference tooling (NIM, TensorRT-LLM) doesn't exist on Mac. The server ecosystem assumes Linux.
+
+5. **Currently unavailable.** No stock, no ETA as of April 2026. M5 Ultra expected ~WWDC June 8.
+
+**Summary:** if you only cared about tok/s on a 70B model and none of the operational concerns applied, the M3 Ultra 256GB would be a reasonable choice. The headless/IPMI requirement is what actually disqualifies it for this use case.
 
 ---
 
