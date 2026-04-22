@@ -6,6 +6,12 @@ The model choice is open. This file covers the key axes that affect hardware siz
 
 ### Dense vs. MoE architecture
 
+Two independent axes:
+- **Total params → storage.** The entire model must fit in memory (VRAM + system RAM). This determines whether the hardware can run the model at all.
+- **Active params → throughput.** Only the active slice is computed per token. This determines tokens/sec.
+
+A 229B MoE with 10B active params needs ~130GB of storage but generates at roughly the speed of a 10B dense model. You get the knowledge capacity of a 229B model at the latency of a 10B model — as long as you have somewhere to park the weights.
+
 The right mental model: **MoE trades storage for speed, not quality for speed.**
 
 **Dense** (e.g. Llama, Qwen3, DeepSeek-R1): every parameter is active every forward pass. What you store is what you compute.
