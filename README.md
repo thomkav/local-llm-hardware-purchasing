@@ -64,9 +64,13 @@ Full comparison in [`research/builds.md`](research/builds.md).
 ## Research Notes
 
 - [`research/model-considerations.md`](research/model-considerations.md) — model tiers, dense vs MoE tradeoffs, candidate models
-- [`research/builds.md`](research/builds.md) — all build options compared, market timing
+- [`research/builds.md`](research/builds.md) — all build options compared, power costs, market timing
 - [`research/risks.md`](research/risks.md) — used hardware risk analysis and verification checklists
 - [`shopping/learning-build.md`](shopping/learning-build.md) — component sourcing for the learning build option
+
+## Installation Notes
+
+- [`setup/basement-install.md`](setup/basement-install.md) — humidity mitigation, rack mounting options, networking (switch, Tailscale), cabling
 
 ---
 

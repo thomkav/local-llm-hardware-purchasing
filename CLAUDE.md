@@ -8,6 +8,7 @@ See `README.md` for project overview, current status, and component decisions.
 - `research/builds.md` — all build options compared (DGX Spark, learning, mid-tier, full)
 - `research/risks.md` — used hardware risk analysis and verification checklists
 - `shopping/learning-build.md` — component sourcing for the learning build option
+- `setup/basement-install.md` — humidity, rack mounting, networking, cabling for Portland unfinished basement
 
 ## Context for Claude
 - Goal: run an open-weight coding model locally to mock the Anthropic endpoint for Claude Code
