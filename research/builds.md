@@ -80,6 +80,22 @@ Sources: TheServerStore, UNIXSurplus, Bargain Hardware (UK), ServerMonkey, r/har
 
 ---
 
+## Power & Electrical (Portland, OR residential)
+
+PGE rate: **$0.19/kWh** as of April 2026 ([after 5% increase effective April 1](https://www.opb.org/article/2026/03/31/portland-general-electric-pacific-power-raise-rates/)). Estimates below assume ~8h/day active inference + remainder at idle.
+
+| Build | Peak draw | Sustained inference | Est. monthly cost | Circuit needed |
+|-------|-----------|-------------------|-------------------|----------------|
+| DGX Spark | 300W | ~200W | ~$13/mo | Standard 15A fine |
+| Learning (3090 + EPYC) | ~580W | ~450W | ~$30/mo | Standard 15A fine |
+| Mid-tier (2× A6000 + EPYC) | ~925W | ~750W | ~$50/mo | 15A works; dedicated 20A recommended if sharing circuit |
+
+None of these require a dedicated circuit or 240V — that only becomes a concern at 3kW+ (e.g. an 8-GPU rig). A dedicated 20A circuit (~$150–300 to have an electrician run one) is a comfort upgrade for the mid-tier, not a requirement. The NEC 80% continuous rule puts a 15A circuit's practical limit at 1,440W, so even the mid-tier's ~925W peak has real headroom.
+
+Heat output roughly equals power consumption — the mid-tier running at 750W sustained in a small room will be noticeable.
+
+---
+
 ## Market Timing Notes (as of April 2026)
 
 **Reasons to wait:**
