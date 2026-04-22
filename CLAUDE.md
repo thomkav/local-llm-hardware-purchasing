@@ -10,6 +10,7 @@ See `README.md` for project overview, current status, and component decisions.
 - `shopping/learning-build.md` — component sourcing for the learning build option
 - `setup/basement-install.md` — humidity, rack mounting, networking, cabling for Portland unfinished basement
 - `setup/mac-studio-mlx-remote.md` — colleague's M4 Max Studio: MLX inference + Tailscale remote access (side project, not part of Thomas's purchase)
+- `setup/mac-studio-mlx-remote-for-colleague.md` — same workflow rewritten in second person, shareable directly with the colleague
 
 ## Context for Claude
 - Goal: run an open-weight coding model locally to mock the Anthropic endpoint for Claude Code
