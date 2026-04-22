@@ -5,8 +5,37 @@ The model choice is open. This file covers the key axes that affect hardware siz
 ## What matters for hardware sizing
 
 ### Dense vs. MoE architecture
-- **Dense** (e.g. Llama, Qwen, DeepSeek-R1): every parameter is active every token. VRAM requirement = model size at chosen quant. Straightforward.
-- **MoE** (e.g. MiniMax M2.1, DeepSeek-V3, Mixtral): only a fraction of params are *computed* per token, which is why generation is fast even on huge models. However, *all* weights still need to be stored in accessible memory (VRAM or system RAM) — the router can call any expert at any time. A 229B MoE at Q4 still occupies ~130GB; it just runs faster than a 229B dense model would. The benefit over dense is speed and CPU-offload friendliness, not reduced storage footprint.
+
+The right mental model: **MoE trades storage for speed, not quality for speed.**
+
+**Dense** (e.g. Llama, Qwen3, DeepSeek-R1): every parameter is active every forward pass. What you store is what you compute.
+
+**MoE** (e.g. MiniMax M2.1, DeepSeek-V3, Mixtral): the network has many "expert" sub-networks and a learned router that picks 2–8 of them per token. Total parameter count is large (all experts combined), but active parameter count per token is small. Storage requirement is proportional to total params; compute per token is proportional to active params only.
+
+#### Why MoE exists: more capacity for the same training compute budget
+If you want to train a model that knows a lot about many topics, you can either make a larger dense model (expensive to train and run) or make an MoE model where different experts specialize in different domains. You get the breadth of a 229B model at the inference cost of a ~10B model. The tradeoff is that you need to store all 229B somewhere.
+
+#### Where dense wins over MoE at the same total parameter count
+
+This is the key question. If a 30B dense model and a 30B-total-params MoE model exist, which is better?
+
+**Dense wins on:**
+- **Coherence and depth on focused tasks.** All weights collaborate on every token. A dense model has richer internal connections for tasks that need sustained, integrated reasoning — like debugging a subtle bug across many files. MoE routing means some information literally never passes through certain experts.
+- **Consistency.** The router can send similar inputs to different experts depending on small phrasing differences, which can cause slightly inconsistent outputs. Dense models are more deterministic in character.
+- **Fine-tuning quality.** Dense models are easier to fine-tune with LoRA/QLoRA — every layer is always active, so gradient updates are straightforward. MoE fine-tuning requires careful balancing of expert load, and most heavily instruction-tuned or RLHF'd open models are dense.
+- **Quantization resilience.** At aggressive quant levels (Q3/Q4), dense models tend to degrade more gracefully. Quantizing individual MoE experts can produce uneven quality drops.
+- **Hardware efficiency when it fits in VRAM.** A 30B dense model that lives entirely in 48GB of VRAM runs with zero memory bandwidth overhead for expert loading. A large MoE requiring RAM offload adds latency on every expert swap.
+
+**MoE wins on:**
+- **Breadth across diverse domains.** Experts can specialize, so a 229B MoE has more total "knowledge" than a 30B dense model, at comparable inference speed.
+- **Inference speed relative to total parameter count.** A 229B dense model would be very slow; a 229B MoE with 10B active params is fast.
+- **CPU offload tolerance.** Because only a small set of experts is needed at a time, MoE models can tolerate having most weights in slower system RAM rather than fast VRAM, with less throughput penalty than a dense model in the same situation.
+
+#### The practical upshot for this use case
+
+For a **coding assistant specifically**, the MoE breadth advantage mostly doesn't apply — you're not asking it to switch between writing poetry and analyzing genome sequences. What matters is deep, consistent code understanding. Dense models in the 30–70B range, which have been heavily fine-tuned specifically for code, tend to be strong competitors to much larger MoE models on coding benchmarks, and they run faster on the available hardware.
+
+The main reason to consider a large MoE (229B+) is if you want general capability across many domains from one model, or if you find benchmarks showing it clearly outperforms the dense alternatives on your specific tasks.
 
 ### Parameter count and quant
 | Model size | Q4 quant | Q8 quant | Notes |
