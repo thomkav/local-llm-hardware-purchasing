@@ -2,6 +2,12 @@
 
 Research and shopping notes for running an open-weight coding model locally to mock the Anthropic/Claude API endpoint for Claude Code. Both the model and hardware are still being evaluated.
 
+## Intentions
+
+Two users (one local in Portland, OR; one remote collaborator) both point their Claude Code installations at a shared inference server running in a basement rack. Goals: eliminate API costs for heavy Claude Code usage, keep code and context local, and share capacity without each needing separate hardware.
+
+Claude Code's request pattern drives the hardware requirements more than raw tok/s: it sends large prompts (8k–32k tokens of repo context per request), which means **prefill speed (compute-bound)** matters as much as generation speed (bandwidth-bound). See [`setup/intentions.md`](setup/intentions.md) for full use case detail and [`setup/multi-user-access.md`](setup/multi-user-access.md) for concurrency patterns and the recommended vLLM + LiteLLM stack.
+
 ---
 
 ## Status
@@ -70,8 +76,10 @@ Throughput varies significantly by model size — numbers below are illustrative
 - [`research/risks.md`](research/risks.md) — used hardware risk analysis and verification checklists
 - [`shopping/learning-build.md`](shopping/learning-build.md) — component sourcing for the learning build option
 
-## Installation Notes
+## Installation & Setup Notes
 
+- [`setup/intentions.md`](setup/intentions.md) — full use case detail, what Claude Code actually does to an inference server
+- [`setup/multi-user-access.md`](setup/multi-user-access.md) — concurrency patterns, throughput expectations, vLLM + LiteLLM stack for two users
 - [`setup/basement-install.md`](setup/basement-install.md) — humidity mitigation, rack mounting options, networking (switch, Tailscale), cabling
 
 ---
