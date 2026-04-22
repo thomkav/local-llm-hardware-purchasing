@@ -59,7 +59,7 @@ Good fit for: DGX Spark (single unit), learning build with 24GB GPU, any hardwar
 | Model | Params | Notes |
 |-------|--------|-------|
 | Qwen3 Coder 30B | 30B | [~483 tok/s on DGX Spark (FP8)](https://developer.nvidia.com/blog/how-nvidia-dgx-sparks-performance-enables-intensive-ai-tasks/) — very fast |
-| DeepSeek-Coder-V2-Lite | 16B MoE (2.4B active) | Extremely efficient for coding |
+| DeepSeek-Coder-V2-Lite | 16B MoE (2.4B active) | Distilled from Coder V2; extremely efficient for coding; see full model in Large MoE section |
 | Codestral 22B (Mistral) | 22B | Strong coding benchmark scores |
 
 ### Mid-size (~70B)
@@ -76,8 +76,9 @@ Good fit for: mid-tier+ build with large system RAM. Not a good fit for DGX Spar
 
 | Model | Params | Active params | Q4 storage | Notes |
 |-------|--------|--------------|------------|-------|
-| MiniMax M2.1 | 229B MoE | ~10B | ~130GB | Original reference; needs Q3 (~108GB) on DGX Spark |
-| DeepSeek-V3 | 671B MoE | ~37B | ~400GB | Very capable; needs mid-tier build minimum |
+| DeepSeek Coder V2 | 236B MoE | ~21B | ~140GB | Coding-focused; more active params than M2.1 so stronger on complex code; needs mid-tier build |
+| MiniMax M2.1 | 229B MoE | ~10B | ~130GB | Original reference; general-purpose; needs Q3 (~108GB) on DGX Spark |
+| DeepSeek-V3 | 671B MoE | ~37B | ~400GB | General-purpose; needs mid-tier build minimum |
 
 ---
 
