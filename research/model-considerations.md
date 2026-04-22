@@ -69,13 +69,13 @@ Good fit for: DGX Spark (single unit), learning build with 24GB GPU, any hardwar
 | Codestral 22B (Mistral) | 22B | Strong coding benchmark scores |
 
 ### Mid-size (~70B)
-Good fit for: mid-tier build (2× A6000), DGX Spark pair (256GB).
+Good fit for: DGX Spark (single unit), mid-tier build. At Q4/FP8 a 70B model is ~43–70GB — well within the 128GB ceiling with room for KV cache. Only FP16 (~140GB) would exceed it.
 
-| Model | Params | Notes |
-|-------|--------|-------|
-| Qwen3 72B | 72B | Strong reasoning + coding |
-| Llama 4 Scout | 17B MoE (active ~3B) | Very efficient, good instruction following |
-| DeepSeek-R1 70B | 70B | Reasoning-focused, strong coder |
+| Model | Params | Q4 storage | Notes |
+|-------|--------|-----------|-------|
+| Qwen3 72B | 72B dense | ~43GB | Strong reasoning + coding |
+| DeepSeek-R1 70B | 70B dense | ~43GB | Reasoning-focused, strong coder |
+| Llama 4 Scout | 17B MoE (3B active) | ~10GB | Very efficient; fits on any hardware |
 
 ### Large MoE (~200B+)
 Good fit for: mid-tier+ build with large system RAM. Not a good fit for DGX Spark single unit — all weights must be stored in memory; Q4 of a 229B MoE is ~130GB, which exceeds the 128GB unified memory ceiling after accounting for KV cache. ([NVIDIA's own spec](https://www.nvidia.com/en-us/products/workstations/dgx-spark/) says "up to 200B parameters" for inference.)
