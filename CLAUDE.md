@@ -1,34 +1,20 @@
-# Local LLM Hardware Purchasing
+# Local LLM Hardware Purchasing — Claude Context
 
-## Project Goal
-Build a headless Linux server to run MiniMax M2.1 locally, virtualizing the Anthropic/Claude API endpoint for use with Claude Code.
-
-## Current Decision
-**Learning build** (~$2,200–2,750) — single GPU, 128GB RAM, EPYC Rome, learn the stack before committing to bigger hardware.
+See `README.md` for project overview, current status, and component decisions.
 
 ## Key Files
+- `README.md` — status, decisions, component table (human-readable overview)
 - `research/model-requirements.md` — MiniMax M2.1 specs and quant options
 - `research/builds.md` — full build comparisons (learning, mid-tier, full)
-- `research/components.md` — sourced component links and prices
-- `research/risks.md` — used hardware risk analysis
-- `shopping/learning-build.md` — active shopping list with current prices and decisions
+- `research/risks.md` — used hardware risk analysis and verification checklists
+- `shopping/learning-build.md` — active shopping list with sourcing links and budget tracker
 
-## Context
-- Date research started: 2026-04-17
+## Context for Claude
 - Primary model: MiniMax M2.1 (229B MoE, ~10B active params/token)
-- Use case: mock Anthropic endpoint for Claude Code
-- Headless server, so no Mac (no IPMI, locked RAM, Apple premium not justified)
+- Use case: mock Anthropic endpoint for Claude Code via claude-code-router
+- Headless Linux server (IPMI required — rules out Mac)
+- Current phase: sourcing components for the learning build
 
-## Software Stack (planned)
-- Ubuntu 24.04 Server
-- llama.cpp (best MoE support, runs Unsloth GGUFs)
-- claude-code-router (proxy Claude Code → OpenAI-compatible endpoint)
-- Start quant: UD-Q4_K_XL (~130GB)
-
-## Current Status
-- [ ] Finalize learning build component list
-- [ ] Source / price-check all components
-- [ ] Purchase
-- [ ] Build and burn-in
-- [ ] Install software stack
-- [ ] Test Claude Code integration
+## When updating status
+Update the status table in `README.md` as components are purchased and build phases complete.
+Update per-component "Status" fields in `shopping/learning-build.md` with actual prices paid.
