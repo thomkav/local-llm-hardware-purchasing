@@ -9,7 +9,8 @@ Research and shopping notes for building a headless Linux server to run **MiniMa
 | Phase | Status |
 |-------|--------|
 | Research builds + tradeoffs | ✅ Done |
-| Source components | 🔄 In progress |
+| **Choose a build** | 🔄 In progress |
+| Source components | ⬜ Not started |
 | Purchase | ⬜ Not started |
 | Build + burn-in | ⬜ Not started |
 | Install software stack | ⬜ Not started |
@@ -17,33 +18,24 @@ Research and shopping notes for building a headless Linux server to run **MiniMa
 
 ---
 
-## Decision: Learning Build (~$2,250–2,680)
+## Build Options
 
-Single GPU, 128GB RAM, EPYC Rome SP3. Learn the stack before committing to bigger hardware.
+Full comparison in [`research/builds.md`](research/builds.md). Summary:
 
-### Why not the big rig?
-MiniMax M2.1 is a 229B **MoE** model with only ~10B active params per token. The 192GB VRAM + 768GB RAM build people post on Reddit is overbuilt for this model. A single 24GB GPU keeps the active layers hot; the rest lives in system RAM. See [`research/model-requirements.md`](research/model-requirements.md).
+| Build | Cost | GPU VRAM | Est. Throughput | Notes |
+|-------|------|----------|-----------------|-------|
+| Learning (single 3090) | ~$2,250–2,680 | 24GB | 8–15 tok/s | Low risk, start learning now |
+| Mid-tier (used Milan + 2× A6000) | ~$8–11k | 96GB | 30–50 tok/s | Q4/Q5 fully in VRAM |
+| Full (new Genoa + Pro 6000 Blackwell) | ~$20–27k | 96GB | 30–50 tok/s | All new; DDR5 overpriced right now |
+| Mac Studio M3 Ultra 256GB | ~$5.6k | 256GB unified | 20–25 tok/s | No IPMI, unavailable as of Apr 2026 |
 
-### Why not Mac?
-No IPMI (no out-of-band management for a headless server), soldered RAM, slower prompt ingestion vs. CUDA on large repo contexts, and the Apple premium isn't justified for a server. M3 Ultra 256GB was the best option but has been "currently unavailable" since April 2026 with no ETA. See [`research/builds.md`](research/builds.md).
+**Key context:** MiniMax M2.1 is a 229B MoE model with ~10B active params/token, so it doesn't need as much VRAM as a dense 70B model. The learning build is not underpowered for this use case — it's a deliberate starting point. See [`research/model-requirements.md`](research/model-requirements.md) for the hardware math.
 
----
-
-## Component List
-
-| Component | Choice | Target Price | Status |
-|-----------|--------|-------------|--------|
-| GPU | EVGA RTX 3090 FTW3 Ultra 24GB | $650–750 | Candidate identified |
-| CPU | EPYC 7402P 24c (Rome, SP3, unlocked) | $200–350 | Not purchased |
-| Motherboard | Supermicro H12SSL-i (IPMI) | $550–750 | Not purchased |
-| RAM | 8× 16GB DDR4-3200 RDIMM ECC (128GB) | $250–400 | Not purchased |
-| PSU | Corsair RM1000x 1000W | $180 | Not purchased |
-| Case | Phanteks Enthoo Pro II Server Edition | $170 | Not purchased |
-| CPU Cooler | Noctua NH-U14S TR4-SP3 | $100 | Not purchased |
-| Storage | Samsung 990 Pro 2TB NVMe | $150 | Not purchased |
-| **Total** | | **$2,250–2,680** | |
-
-Full sourcing links and notes: [`shopping/learning-build.md`](shopping/learning-build.md)
+### Factors still being weighed
+- Whether to start small and upgrade vs. buy once for the target capacity
+- Used hardware risk tolerance (see [`research/risks.md`](research/risks.md))
+- DDR5 RDIMM pricing (currently inflated ~2×; may normalize in 12–24 months)
+- M5 Ultra Mac Studio expected ~WWDC June 2026 — could reset the used GPU market
 
 ---
 
@@ -65,7 +57,7 @@ Expected throughput: **~8–15 tok/s** on coding prompts with this hardware.
 - [`research/model-requirements.md`](research/model-requirements.md) — M2.1 specs, quant options, why MoE changes the hardware math
 - [`research/builds.md`](research/builds.md) — all build tiers compared (learning → mid-tier → full), Mac analysis, market timing
 - [`research/risks.md`](research/risks.md) — used hardware risk analysis and verification checklists
-- [`shopping/learning-build.md`](shopping/learning-build.md) — active shopping list with per-component sourcing links
+- [`shopping/learning-build.md`](shopping/learning-build.md) — component sourcing links for the learning build option
 
 ---
 
