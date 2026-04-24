@@ -8,11 +8,11 @@ Build choice is still open. See `model-considerations.md` — hardware sizing de
 
 NVIDIA GB10 Grace Blackwell Superchip. Compact desktop, 300W peak. ([Product page](https://www.nvidia.com/en-us/products/workstations/dgx-spark/), [LMSYS review](https://www.lmsys.org/blog/2025-10-13-nvidia-dgx-spark/))
 
-- **Memory**: 128GB LPDDR5X unified — CPU and GPU share the same pool ([specs](https://www.aitooldiscovery.com/ai-infra/nvidia-dgx-spark-explained))
-- **AI compute**: ~1 PFLOP FP4
+- **Memory**: 128GB LPDDR5X (Low-Power DDR5X) unified — CPU and GPU share the same pool ([specs](https://www.aitooldiscovery.com/ai-infra/nvidia-dgx-spark-explained))
+- **AI compute**: ~1 PFLOP FP4 (one petaflop at 4-bit floating-point precision)
 - **Inference perf**: [~483 tok/s on Qwen3 Coder 30B (FP8), ~38 tok/s generation on GPT-OSS 120B](https://developer.nvidia.com/blog/how-nvidia-dgx-sparks-performance-enables-intensive-ai-tasks/)
 - **Two-unit NVLink**: connect two for 256GB unified memory, ~$9,400
-- **Management**: NVIDIA's own tooling; no traditional IPMI but decent remote management
+- **Management**: NVIDIA's own tooling; no traditional IPMI (Intelligent Platform Management Interface — out-of-band server control) but decent remote management
 - **Form factor**: Mac Mini-sized, quiet, 300W — no rack needed
 - **Availability**: in stock via [NVIDIA](https://marketplace.nvidia.com/en-us/enterprise/personal-ai-supercomputers/dgx-spark/), [Amazon](https://www.amazon.com/NVIDIA-DGX-SparkTM-Supercomputer-Blackwell/dp/B0FWJ16CCH), Acer/ASUS/Dell/MSI OEM variants
 - **Price note**: [increased from $3,999 → $4,699 in February 2026](https://forums.developer.nvidia.com/t/2-23-2026-price-change-announcement/361713) due to LPDDR5X supply constraints
@@ -23,16 +23,16 @@ NVIDIA GB10 Grace Blackwell Superchip. Compact desktop, 300W peak. ([Product pag
 
 ---
 
-## Option 1 — Learning Build: Single RTX 3090 (~$2,250–2,680)
+## Option 1 — Learning Build: Single RTX 3090 (~$2,400–2,900)
 
 Single GPU, 128GB DDR4, EPYC Rome. Cheapest path to hands-on learning.
 
 - CPU: EPYC 7402P (24c Rome, SP3, unlocked) ~$200–350
 - Motherboard: Supermicro H12SSL-i (IPMI) ~$550–750
-- RAM: 8× 16GB DDR4-3200 RDIMM ECC (128GB) ~$250–400 used
-- GPU: Used RTX 3090 24GB ~$650–800 (EVGA FTW3 Ultra candidate)
+- RAM: 8× 16GB DDR4-3200 RDIMM ECC (128GB) ~$250–400 used _(tight; DRAM crunch may push higher)_
+- GPU: Used RTX 3090 24GB ~$850–1,000 (EVGA FTW3 Ultra candidate) — _up from ~$700 in 2025; April 2026 eBay average ~$975_
 - PSU/case/cooler/storage: ~$600
-- **Total: ~$2,250–2,680**
+- **Total: ~$2,400–2,900** _(last verified 2026-04-22)_
 - **Performance**: ~8–15 tok/s on a 200B MoE; much faster on 30–70B models
 
 Full sourcing: `../shopping/learning-build.md`
@@ -43,19 +43,19 @@ Full sourcing: `../shopping/learning-build.md`
 
 ---
 
-## Option 2 — Mid-Tier DIY: Used Milan + 2× A6000 (~$8–11k)
+## Option 2 — Mid-Tier DIY: Used Milan + 2× A6000 (~$14–18k)
 
 - CPU: EPYC 7713P (64c Milan, SP3) used ~$600–900
 - Motherboard: Supermicro H12SSL-i ~$700–900
-- RAM: 12× 64GB DDR4-3200 RDIMM ECC (768GB) ~$2,400–4,800 used
-- GPU: 2× used RTX A6000 48GB (~$6,000–9,000 pair)
+- RAM: 12× 64GB DDR4-3200 RDIMM ECC (768GB) ~$3,000–5,500 used _(2026 DRAM crunch; was $2,400–4,800 in 2025)_
+- GPU: 2× used RTX A6000 48GB (~$10,000–12,000 pair) — _up from $6,000–9,000 in 2025; April 2026 single-card used ~$5,400_
 - Chassis + PSU + storage ~$800–1,200
-- **Total: ~$10–15k**
+- **Total: ~$14–18k** _(last verified 2026-04-22)_
 - **Performance**: Q4/Q5 of a 200B MoE fully in VRAM, ~30–50 tok/s; 70B models very fast
 
 Sources: TheServerStore, UNIXSurplus, Bargain Hardware (UK), ServerMonkey, r/hardwareswap
 
-**Best fit if**: want IPMI headless management + full VRAM for large models + room to grow.
+**Best fit if**: want IPMI headless management + full VRAM for large models + room to grow. **Note:** used-hardware price inflation in 2026 has narrowed the gap to DGX Spark significantly — GPU pair alone now costs more than a complete Spark. This build is plan B if the Spark's 128GB ceiling later proves too tight for a chosen MoE model.
 
 ---
 
@@ -75,7 +75,7 @@ Sources: TheServerStore, UNIXSurplus, Bargain Hardware (UK), ServerMonkey, r/har
 
 - M3 Ultra 256GB (~$5.6k when available) — 819GB/s memory bandwidth
 - M4 Max 128GB (~$3.5k) — caps at 128GB
-- As of April 2026: both configs "currently unavailable," no ETA; M5 Ultra expected ~WWDC June 2026
+- As of April 2026: both configs "currently unavailable," no ETA. M5 Ultra originally expected WWDC June 2026; [Bloomberg's Gurman reported 2026-04-19](https://www.macworld.com/article/2973459/2026-mac-studio-m5-release-date-specs-price-rumors.html) that supply-chain snags have pushed it to **October 2026**.
 
 ### Why not recommended — and what 819GB/s actually means
 
@@ -91,7 +91,7 @@ The reasons not to use it are operational and architectural, not performance:
 
 4. **macOS, not Linux.** llama.cpp's Metal backend works, but NVIDIA's inference tooling (NIM, TensorRT-LLM) doesn't exist on Mac. The server ecosystem assumes Linux.
 
-5. **Currently unavailable.** No stock, no ETA as of April 2026. M5 Ultra expected ~WWDC June 8.
+5. **Currently unavailable.** No stock, no ETA as of April 2026. M5 Ultra slipped from WWDC June to ~October 2026.
 
 **Summary:** if you only cared about tok/s on a 70B model and none of the operational concerns applied, the M3 Ultra 256GB would be a reasonable choice. The headless/IPMI requirement is what actually disqualifies it for this use case.
 
@@ -107,7 +107,7 @@ PGE rate: **$0.19/kWh** as of April 2026 ([after 5% increase effective April 1](
 | Learning (3090 + EPYC) | ~580W | ~450W | ~$30/mo | Standard 15A fine |
 | Mid-tier (2× A6000 + EPYC) | ~925W | ~750W | ~$50/mo | 15A works; dedicated 20A recommended if sharing circuit |
 
-None of these require a dedicated circuit or 240V — that only becomes a concern at 3kW+ (e.g. an 8-GPU rig). A dedicated 20A circuit (~$150–300 to have an electrician run one) is a comfort upgrade for the mid-tier, not a requirement. The NEC 80% continuous rule puts a 15A circuit's practical limit at 1,440W, so even the mid-tier's ~925W peak has real headroom.
+None of these require a dedicated circuit or 240V — that only becomes a concern at 3kW+ (e.g. an 8-GPU rig). A dedicated 20A circuit (~$150–300 to have an electrician run one) is a comfort upgrade for the mid-tier, not a requirement. The NEC (National Electrical Code) 80% continuous rule puts a 15A circuit's practical limit at 1,440W, so even the mid-tier's ~925W peak has real headroom.
 
 Heat output roughly equals power consumption — the mid-tier running at 750W sustained in a small room will be noticeable.
 
@@ -117,7 +117,7 @@ Heat output roughly equals power consumption — the mid-tier running at 750W su
 
 **Reasons to wait:**
 - DDR5 RDIMM prices should ease in 12–24 months
-- M5 Ultra (~WWDC June 8) may reset used workstation GPU prices
+- M5 Ultra Mac Studio (now ~October 2026 per [Bloomberg, 2026-04-19](https://www.macworld.com/article/2973459/2026-mac-studio-m5-release-date-specs-price-rumors.html)) may eventually reset used workstation GPU prices, but the slip makes this a late-2026 factor at earliest
 - RTX Pro 6000 Blackwell prices will drift down as used units appear
 
 **Reasons not to wait:**

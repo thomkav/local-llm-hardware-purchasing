@@ -2,6 +2,8 @@
 
 Two users, one inference server. This doc covers concurrency models, throughput expectations, and the recommended software stack.
 
+> **Scope:** the vLLM + LiteLLM recommendation below applies to the **Linux/CUDA** production path (DGX Spark or DIY server). The Mac Studio / MLX path in [`mac-studio-mlx-remote.md`](mac-studio-mlx-remote.md) runs `mlx_lm.server`, which processes requests **sequentially** — not continuously batched. Two concurrent users on MLX will queue, not overlap. That is fine for a 2-person side project with bursty, non-overlapping use; it is not equivalent to the vLLM story below.
+
 ---
 
 ## How concurrent LLM requests work
@@ -41,7 +43,7 @@ Rough estimates (generation tok/s per user, two concurrent):
 ### Inference backend: vLLM
 [vLLM](https://github.com/vllm-project/vllm) is the right choice over llama.cpp for multi-user:
 - Continuous batching with PagedAttention — efficient KV cache sharing across requests
-- OpenAI-compatible API out of the box (what claude-code-router expects)
+- OpenAI-compatible API out of the box (what LiteLLM's Anthropic-unified endpoint wraps for Claude Code; `claude-code-router` is deprecated)
 - Better throughput under concurrent load than llama.cpp's parallel slots
 
 llama.cpp is fine for single-user or experimentation. Switch to vLLM when serving two users seriously.
@@ -58,7 +60,7 @@ Setup: LiteLLM runs on the inference server, listens on a port (e.g. 4000), prox
 ### Network: Tailscale
 Both users install Tailscale. The server gets a stable `100.x.x.x` address. Remote collaborator adds themselves to the same Tailscale network (invite via the Tailscale admin console). No port-forwarding, no public IP exposure needed.
 
-Access control: Tailscale ACLs can restrict which devices can reach port 4000 on the server, so only your two machines can hit the inference endpoint.
+Access control: Tailscale ACLs (Access Control Lists) can restrict which devices can reach port 4000 on the server, so only your two machines can hit the inference endpoint.
 
 ### Summary stack
 

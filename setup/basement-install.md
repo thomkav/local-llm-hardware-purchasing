@@ -6,7 +6,7 @@ Unfinished basement in Portland, OR. Server + networking gear.
 
 ## Humidity
 
-This is the real concern for Portland. Outdoor RH in Portland averages ~80% year-round, and unfinished basements without active dehumidification routinely sit at 65–75% RH, higher after rain. Electronics are typically rated for 20–80% RH non-condensing, but sustained operation near the top of that range accelerates corrosion on PCB traces and connectors over years.
+This is the real concern for Portland. Outdoor RH (Relative Humidity) in Portland averages ~80% year-round, and unfinished basements without active dehumidification routinely sit at 65–75% RH, higher after rain. Electronics are typically rated for 20–80% RH non-condensing, but sustained operation near the top of that range accelerates corrosion on PCB traces and connectors over years.
 
 The bigger risk is **condensation**: if the server is off and the basement cools overnight, then the server warms up quickly when powered on, you can get moisture on cold surfaces. This is especially risky on a GPU or motherboard coming out of storage.
 

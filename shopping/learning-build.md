@@ -1,6 +1,8 @@
 # Learning Build — Active Shopping List
 
-Target: ~$2,200–2,750 | Single GPU | 128GB RAM | EPYC Rome | Headless Linux
+Target: ~$2,400–2,900 | Single GPU | 128GB RAM | EPYC Rome | Headless Linux
+
+_Prices last verified: 2026-04-22. Range widened vs. 2025 because used RTX 3090 has climbed to ~$975 average on eBay (up from ~$700) and DDR4 RDIMM is tight under the broader 2026 DRAM crunch._
 
 ---
 
@@ -15,7 +17,7 @@ Candidate: EVGA GeForce RTX 3090 FTW3 Ultra 24GB GDDR6X (24G-P5-3987-KR)
 - Confirmed: fits Phanteks Enthoo Pro II Server Edition
 - **Notes**: EVGA no longer honors warranty transfers; buy gamer-sold, not miner
 
-**Target price**: under $750 shipped for verified good condition
+**Target price**: under $1,000 shipped for verified good condition (April 2026 eBay average ~$975; was ~$700 in 2025)
 
 **Sources**:
 - eBay RTX 3090 listings: https://www.ebay.com/sch/i.html?_nkw=rtx+3090+24gb
@@ -52,7 +54,7 @@ Sources:
 
 Target price: ~$550–750
 
-This is the headless server key piece — IPMI/BMC gives real out-of-band management.
+This is the headless server key piece — IPMI (Intelligent Platform Management Interface) / BMC (Baseboard Management Controller) gives real out-of-band management: remote power-cycle, console, and sensor access even when the OS is dead.
 
 Sources:
 - Newegg: https://www.newegg.com/supermicro-mbd-h12ssl-i-o/p/N82E16813183734
@@ -61,6 +63,8 @@ Sources:
 ---
 
 ## RAM — 8× 16GB DDR4-3200 RDIMM ECC (128GB total)
+
+_RDIMM = Registered DIMM (buffered server-grade module); ECC = Error-Correcting Code (detects/corrects single-bit memory errors)._
 
 **Status: Not purchased**
 
@@ -132,9 +136,11 @@ Sources:
 
 ## Budget Tracker
 
+_Status as of 2026-04-22: no components purchased yet; shopping list active pending final go-ahead on this build as the learning on-ramp._
+
 | Component | Target | Actual | Status |
 |-----------|--------|--------|--------|
-| GPU (RTX 3090 FTW3 Ultra) | $650–750 | — | Candidate identified |
+| GPU (RTX 3090 FTW3 Ultra) | $850–1,000 | — | Candidate identified |
 | CPU (EPYC 7402P) | $200–350 | — | Not purchased |
 | Motherboard (H12SSL-i) | $550–750 | — | Not purchased |
 | RAM (128GB DDR4 RDIMM) | $250–400 | — | Not purchased |
@@ -142,7 +148,7 @@ Sources:
 | Case (Enthoo Pro II) | $170 | — | Not purchased |
 | CPU Cooler (NH-U14S SP3) | $100 | — | Not purchased |
 | Storage (990 Pro 2TB) | $150 | — | Not purchased |
-| **Total** | **$2,250–2,680** | — | |
+| **Total** | **$2,400–2,900** | — | |
 
 ---
 
@@ -162,6 +168,6 @@ If you want to start even smaller:
 - [ ] Build llama.cpp from source (CUDA backend)
 - [ ] Download MiniMax-M2.1 UD-Q4_K_XL GGUF (from Unsloth)
 - [ ] Start llama.cpp server on OpenAI-compatible port (8080)
-- [ ] Install claude-code-router
-- [ ] Configure Claude Code to point at local endpoint
+- [ ] Install the Anthropic gateway (Ollama v0.14+ for its native `/v1/messages`, or LiteLLM in front of vLLM). `claude-code-router` is no longer recommended.
+- [ ] Configure Claude Code to point at local endpoint — see [`../setup/claude_code_any_model.md`](../setup/claude_code_any_model.md)
 - [ ] Test coding prompt throughput (target: 8–15 tok/s)

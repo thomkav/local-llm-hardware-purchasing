@@ -1,5 +1,7 @@
 # Mac Studio LLM Setup
 
+> **Paired doc:** [`mac-studio-mlx-remote.md`](mac-studio-mlx-remote.md) is the same workflow written in first person for internal notes. Keep edits to commands, models, or energy/Tailscale settings in sync between the two.
+
 A step-by-step for getting your new Mac Studio (M4 Max, 128GB) running as a local LLM inference server that Thomas can also reach over Tailscale. Plan on 1.5–2 hours end-to-end, most of it model download time you can walk away from.
 
 **What you're building.** An HTTP endpoint on your machine that speaks the OpenAI API. Any tool that talks to OpenAI — Cursor, Continue.dev, raw `curl`, the OpenAI Python SDK — can point at it and run completions on a locally-hosted model. Thomas will reach the same endpoint remotely via Tailscale.

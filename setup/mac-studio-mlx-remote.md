@@ -1,5 +1,7 @@
 # Mac Studio M4 Max — MLX Inference + Remote Access
 
+> **Paired doc:** [`mac-studio-mlx-remote-for-colleague.md`](mac-studio-mlx-remote-for-colleague.md) is the same workflow rewritten in second person for the colleague to follow directly. Keep edits to commands, models, or energy/Tailscale settings in sync between the two.
+
 Setup workflow for a colleague's new Mac Studio (M4 Max, 128GB unified memory). Goal: stand up an OpenAI-compatible inference endpoint on MLX that both of us can reach remotely via Tailscale, so we can collaborate on prompt/model experiments from two machines.
 
 **Why MLX, not vLLM.** vLLM's wins (PagedAttention, CUDA graphs, continuous batching) are NVIDIA-specific. On Apple Silicon it either falls back to CPU or hits experimental MPS paths that are dramatically slower than native alternatives. MLX is Apple's own ML framework — it treats the unified memory as a first-class resource, uses the GPU through Metal, and ships `mlx_lm.server` with an OpenAI-compatible HTTP API. For single/low-concurrency use this is the right tool.
